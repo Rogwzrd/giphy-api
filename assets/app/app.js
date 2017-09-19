@@ -24,26 +24,31 @@ $(document).ready(function() {
             url: "http://api.giphy.com/v1/gifs/search?q=" + arr + "&api_key=2f1ee54721af47b886acfabbf2eed9a3&limit=10",
             method: "GET"
         }).done(function(response) {
+        	//this line empties the parent div so empty elements do not populate the page
+        	imageGrabber.empty();
         	//this forloop itterates through the giphy api and appends iframes based on the embedded url
         	for (var i = 0; i < response.data.length; i++) {
-        		imageGrabber
-        		.empty()
-        		.append("<img>")
-        		.children()
-        		.eq(i)
-        		.addClass("img-responsive")
-        		.attr({
-        			src: response.data[i].images["480w_still"].url,
-        			width: response.data[i].images["480w_still"].width,
-        			height: response.data[i].images["480w_still"].height
-        		})
+        		var imageElement = $("<img>");
+                imageElement
+                .attr("class", "gif")
+        		.attr("state","still")
+                .attr("data-still", response.data[i].images["original_still"].url)
+                .attr("data-animate", response.data[i].images["original"].url)
+        		.attr("src", response.data[i].images["original_still"].url);
+                var p = $("<p>");
+                p.text("Rating: " + response.data[i].rating);
+                imageGrabber
+                .prepend(imageElement)
+                .prepend(p);
+
         	}
             console.log(response);
         });
-    }
+    };
 
     //this function creates the buttons from the buttonHolder array 
     var buttonMaker = () => {
+        buttonGrabber.empty();
         for (var i = 0; i < buttonHolder.length; i++) {
             buttonGrabber
                 .append("<button>" + buttonHolder[i] + "</button>")
@@ -55,13 +60,30 @@ $(document).ready(function() {
         }
     };
     //this funciton takes the information from the input line and adds it to the buttonHolder array
-    // var inputSubmit = (arg) => {
-
-    // }
+    $("#submit-button").on("click", function(event) {
+        event.preventDefault();
+        var newInput = $("#input-space").val();
+        buttonHolder.push(newInput);
+        console.log(buttonHolder);
+        buttonMaker();
+    })
 
     $(document).on('click', '.giphyButton', function() {
     	giphyLoad(this.value);
     })
+
+    $(document).on('click', '.gif', function() {
+        var state = $(this).attr("state")
+        if (state === "still") {
+            $(this).attr("state", "animated");
+            $(this).attr("src", $(this).attr("data-animate"));
+        } else {
+            $(this).attr("state", "still");
+            $(this).attr("src", $(this).attr("data-still"));
+        }
+    })
+
+
 
     buttonMaker();
 });
