@@ -1,0 +1,15 @@
+header {
+	background-color: #ddd;
+}
+
+section {
+	background-color: #ddd;
+}
+
+.giphy-output:focus {
+border: thick solid #000;
+}
+
+.giphyButton {
+	margin: 5px;
+}
