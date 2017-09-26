@@ -6,7 +6,7 @@ section {
 	background-color: #ddd;
 }
 
-.giphy-output:focus {
+.giphy-output:hover {
 border: thick solid #000;
 }
 
